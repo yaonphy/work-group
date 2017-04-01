@@ -31,7 +31,8 @@
 _Q) 我们不需要在POSIX上封装一层吗？ 或者是直接使用POSIX层？ 开发者如何以最有效的方式使用APIs? 他们真的需要底层APIs吗？
 * 开发者真的只是想使用专注于业务层的高级API。
 * 我们采取创建高层级APIs的方式来帮助我们了解底层到底需要怎样的功能?
-* 一个使用底层 APIs 的理由是：POSIX C API 和 Swift之间无法兼容的阻碍. 这在 fcntl(http://pubs.opengroup.org/onlinepubs/009695399/basedefs/fcntl.h.html http://baike.baidu.com/link?url=LRYz4VgUUi3JkfXmRWzgFB01XDqkllbrV7JQW105lDlhaqBlgpHuBqDbxEMy1f98DZQcYDZo_B0eKNGERocOsq) 函数的可变参数特性上更为明显, 在相似的struct之间以二进制进行转换时也非常普遍，如 sockaddr。
+* 一个使用底层 APIs 的理由是：POSIX C API 和 Swift之间无法兼容的阻碍. 这在 fcntl(http://pubs.opengroup.org/onlinepubs/009695399/basedefs/fcntl.h.html http://baike.baidu.com/link?url=LRYz4VgUUi3JkfXmRWzgFB01XDqkllbrV7JQW105lDlhaqBlgpHuBqDbxEMy1f98DZQcYDZo_B0eKNGERocOsq)   
+  函数的可变参数特性上更为明显, 在相似的struct之间以二进制进行转换时也非常普遍，如 sockaddr。
 
 * 一些容易忽略的底层东西:
   * Errno(错误码) and error(错误) 处理 - 可能是标准库的事情 (POSIX lib)
