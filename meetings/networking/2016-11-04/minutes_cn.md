@@ -30,7 +30,7 @@
 
 _Q) 我们不需要在POSIX上封装一层吗？ 或者是直接使用POSIX层？ 开发者如何以最有效的方式使用APIs? 他们真的需要底层APIs吗？
 * 开发者真的只是想使用专注于业务层的高级API。
-* 我们采取创建高级APIs的方式来帮助我们了解底层到底需要怎样的功能?
+* 我们采取创建高层级APIs的方式来帮助我们了解底层到底需要怎样的功能?
 * 一个使用底层 APIs 的理由是：POSIX C API 和 Swift之间无法兼容的阻碍. 这在 fcntl(http://pubs.opengroup.org/onlinepubs/009695399/basedefs/fcntl.h.html http://baike.baidu.com/link?url=LRYz4VgUUi3JkfXmRWzgFB01XDqkllbrV7JQW105lDlhaqBlgpHuBqDbxEMy1f98DZQcYDZo_B0eKNGERocOsq) 函数的可变参数特性上更为明显, 在相似的struct之间以二进制进行转换时也非常普遍，如 sockaddr。
 
 * 一些容易忽略的底层东西:
@@ -39,37 +39,37 @@ _Q) 我们不需要在POSIX上封装一层吗？ 或者是直接使用POSIX层�
   * Basic address processing: resolution, conversion, equality（基本地址的处理：解析，转换，比较？？？）
 
 
-_Q) Whats the value of high level vs low level APIs?_
-Example: Building an interface with an embedded system. The embedded system implements a proprietary mechanism using UDP multicast.  This necessitated manually joining multicast groups, and sending and receiving multicast packets.
-An attempt was made to try to do it with Vapor's network code, but there were difficulties because of the usage assumptions in the Vapor code, such as private methods for managing internet address structures. To achieve what was required, the code had to be forked and modified.
+_Q)高层与底层APIs的价值是什么？ 
+比如: 创建一个API和嵌入式系统连接。 嵌入式系统使用UDP多播实现了自有的一种机制。 这需要手动加入多播组, 进而发送和接收组多播数据包.
+试图用Vapor的网络代码尝试这样做, 但由于Vapor代码中的使用 assumptions 而存在困难, 比如用于管理网络地址结构体的私有方法. 为了实现所需要的，代码必须被fork下来然后修改.
 
 
-* We should be able to expose sockets at a fairly high level - I/O plus config plus policy.
-* But if the fuction a user needs is not there, they will have/need to “drop down” to lower level APIs.
-* Is that dropping down to platform specific C code, or to a “Swift” layer API?
-  * Dropping down to a Swift layer more is desirable and safer.
+* 我们应该在比较高的层级来暴漏sockets - I/O + config + policy.
+* 但是，如果用户需要的功能不能通过高层级API满足，他们将/需要降低到较低级别的API
+* 需要降低到特定平台的C代码，还是“Swift”层API？
+* 降低到 swift 层是更可取和更安全的.
 
 
-_Q) How do we deal with platforms that have additional capabilities?_
-Does the user have to use C code there, or should we provide a way to have per-platform extensions?
-* Swift provides extensions…
-* Platform capability checking “#if os(...)”
+_Q) 怎么处理个别平台需要一些额外功能的问题?_
+用户是否必须在该平台使用C代码, 或者我们应该提供一种方式来实现针对每个平台的extensions
+* Swift 提供了 extensions…
+* 平台兼容的检测 “#if os(...)”
 
 
-_Q) If we have high level abstractions, do we have to assume what the concurrency model is?
-If so, will that prevent other concurrency choices being made, or do we need to provide a lower level construct (as well) that allows you to chose your own model?_
-* We can’t assume what the concurrency model is going to be yet - because those discussions are yet to happen.
+_Q) 如果我们有高层级的抽象,我们必须assume concurrency model是什么吗？
+如果是这样, 将会阻碍其他并发模型的选择, 我们是否需要提供一个较低级别的架构（也可以让使用者选择自己的模型）?_
+* 我们不能假设并发模型将会是何种形式 - 因为针对该议题的讨论还没有开始.
 
-* We could provide APIs that build up in layers:
-  * Lowest level - no assumptions on concurrency. File descriptor and use your own polling.  Is blocking I/O and select() enough on this layer?
-  * Start to bring in async model - Dispatch based for the “default”
-    - Protocol based with a default implementation?
-  * Higher level abstractions - based on what you’re trying to do.
+* 我们可以提供多层级的API:
+  * 底层 - 对于并发没有任何 assumptions. 使用自己的文件描述符（File descriptor） and 使用自己的轮询(polling). 自己选择何种blocking形式的I/O,尽量提供多样的选择?
+  * 开始引入异步模型 - 基于默认的 Dispatch
+    - 基于默认实现的 Protocol?
+  * 高层级别的抽象 - 基于你想要做的事情.
 
-* APIs at the lowest layers are likely to be more concrete (as they are RFC specified) - although we have to decide how to make them “Swifty”.
+* 位于底层的API可能是更具体的 (由于他们是由标准（RFC）设定的) - 虽然我们必须决定如何让他们更 “Swifty”.
 
 
-**Note:** We need to ensure that we use proper terminology in order to avoid confusion:
+**Note:** 我们需要确保我们使用适当的术语来避免混淆:
 * Async vs. Sync (API level)
 * Blocking vs. Non-blocking IO (Concurrency model level)
 
