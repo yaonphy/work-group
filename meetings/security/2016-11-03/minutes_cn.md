@@ -28,24 +28,24 @@ _Q) 安全在服务器端到底有多重要? 不能在前面放一个反向代�
 * 然而，代码的可移植性是必须的. 我们想要 API layer 能兼容各种平台 - 包括 iOS clients 和 Linux/macOS servers. 不必在所有的平台下都保持相同的实现, 但是API应该是（如果可能的话）.
 * 虽然有挑战 - 我们需要以不显著增加开销的方式这样做，, 我们不希望你在iOS客户端上使用Linux/服务器的包.
 
-_Q) What level should the APIs be at? Should they be multi-purpose or implement specific (server) use cases_  
-ie, if I want to make a HTTP request, I don’t want to use a socket, I want to use a convenience API
-* We really want so start at the lowest level, building a multi-purpose API, to provide flexibility of use case.  
-* Once we have that, we can build up one or more layers of more use case based APIs.
+_Q)APIs 应该是怎样层级的? 应该是适用于所有使用场景还是仅仅是针对服务器来实现_  
+例如, 如果我想发起一个 HTTP request, 我不想使用 socket, 就像使用一个便捷的 API
+* 我们真的希望从最底层开始, 构建一个适用于多种使用场景的 API,可以在各种场景案例下灵活扩展.  
+* 一旦这么做了, 我们可以基于底层 API 为更多的使用场景构建一层或者多层服务.
 
-_Q) Should be build in Swift vs reuse existing tech?_  
-* Ideally want to reuse existing components, so we don’t have to maintain complex code, deal with CVEs, etc. There’s no desire to re-invent the wheel.
+_Q) 使用 swift vs 复用已经存在的技术?_  
+* 想想一下使用现有的组件, 我们不必维护复杂的代码, 处理CVEs（CVE - Common Vulnerabilities and Exposures）, 等等. 没必要去重复造轮子.
 
-_Q) If we’re reusing tech, how low a level do we start the API at? Should it be just a layer on, say, common crypto?_  
-* The starting point is probably just to build a common “translation layer” in Swift, and then see if we want to build abstraction layers on top of that.  
-* It’s easier to build up than it is to build down.
+_Q) 如果我们复用已有的技术, 应该从哪层开始设计 API 呢? 应该从 common crypto 上构建一层?_  
+* 起始点应该是使用swift构建一层 “translation layer”, 然后再看是否需要在此之上再构建一个抽象层.  
+* 由下往上构建比由上往下构建要简单.
 
-_Q) Which tech would we use?_  
-* If we want to be consistent on iOS clients and servers, then we need to use CommonCrypto/SecureTransport/Keychain at least there, and it would therefore make sense to on macOS as well.  
-* On the other platforms, OpenSSL or LibreSSL probably makes sense.  
-The key is making the Swift API consistent, so applications and packages that use the API can be ported.  
-* There may be some issues around IO handling, certificate handling and config though.  
-* There’s already an attempt to do this kind of thing in BlueSSLService, so a walk through of that might be informative of potential issues/roadblocks/dragons as we build the new approach.
+_Q) 我们应当使用哪些技术栈的东西?_  
+* 如果我们想使 iOS clients 和 servers 保持一致可用, 那我们至少需要使用 CommonCrypto/SecureTransport/Keychain , 这在 macOS 中也是一样的.  
+* 在其他的平台, OpenSSL 或者 LibreSSL 可能是可行的.  
+关键是使 Swift API 保持一致, 从而使用这些 API的 applications 和 packages 可以移植、兼容.  
+* 不过，对于 IO 处理或许会有些问题,以及 certificate 处理 和 配置.  
+* 在 BlueSSLService 中已经尝试这样做了, 因此其已经走过的路对我们有很大的参考价值，防止我们实践时碰到类似的问题和障碍.
 
 ### Next Steps/Actions:
 * Everyone to review minutes
